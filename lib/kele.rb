@@ -2,16 +2,26 @@
 # gets loaded when we call require './lib/kele'
 
 require "httparty"
+require 'json'
 
 class Kele
   include HTTParty
 
   def initialize(email, password)
-    @email = email
-    @password = password
     @bloc_base_api_url = "https://www.bloc.io/api/v1"
-    @authorization_token = self.class.post("https://www.bloc.io/api/v1/sessions", body: {email: @email, password: @password})
+    response = self.class.post("https://www.bloc.io/api/v1/sessions", body: {email: email, password: password})
 
-    raise "Wrong Email and/or Password" if @authorization_token.code != 200
+    @auth_token = response["auth_token"]
+
+    raise "Wrong Email and/or Password" if response.code != 200
   end
+
+
+  def get_me
+    response = self.class.get("https://www.bloc.io/api/v1/users/me", headers: { "authorization" => @auth_token })
+    @user_data = JSON.parse(response.body)
+
+    puts "name: #{@user_data['name']}\n" + "email: #{@user_data['email']}\n"
+  end
+
 end

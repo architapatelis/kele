@@ -3,12 +3,14 @@ PATH
   specs:
     kele (0.0.1)
       httparty (~> 0.13)
+      json (~> 2.1.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
     httparty (0.14.0)
       multi_xml (>= 0.5.2)
+    json (2.1.0)
     multi_xml (0.6.0)
 
 PLATFORMS
