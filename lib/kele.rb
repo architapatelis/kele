@@ -11,8 +11,8 @@ class Kele
 
   base_uri "https://www.bloc.io/api/v1"
 
+
   def initialize(email, password)
-    #@bloc_base_api_url = "https://www.bloc.io/api/v1"
     response = self.class.post("/sessions", body: {email: email, password: password})
 
     @auth_token = response["auth_token"]
@@ -48,4 +48,14 @@ class Kele
     puts "Message sent!" if response.success?
   end
 
+  def get_checkpoint(checkpoint_id)
+    response = self.class.get("https://www.bloc.io/api/v1/checkpoints/#{checkpoint_id}", headers: { "authorization" => @auth_token })
+    @checkpoint = JSON.parse(response.body)
+  end
+
+  def create_submission(checkpoint_id, assignment_branch = nil, assignment_commit_link = nil, comment)
+    response = self.class.post('/checkpoint_submissions', headers: { "authorization" => @auth_token }, body: { "enrollment_id": 24636, "checkpoint_id": checkpoint_id, "assignment_branch": assignment_branch, "assignment_commit_link": assignment_commit_link, "comment": comment })
+
+    puts "Checkpoint Submitted!" if response.success?
+  end
 end
